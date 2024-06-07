@@ -1,3 +1,12 @@
 #!/usr/bin/python3
 
-from base_model import BaseModel
+from dataclasses import dataclass
+import uuid
+
+@dataclass
+class User:
+    first_name: str
+    last_name: str
+    user_email: str
+    user_uuid: str
+    password: str
