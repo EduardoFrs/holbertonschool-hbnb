@@ -18,20 +18,20 @@ def create_new_user():
     data = request.get_json()
 
     """ verify valid inputs """
-    if 'email' not in data or 'first name' not in data or 'last name' not in data:
-        return jsonify({"Missing required fields"}), 400
+    if 'email' not in data or 'first_name' not in data or 'last_name' not in data:
+        return jsonify({"error": "Missing required fields"}), 400
 
     """ verify valid email """
     if not validate_email(data['email']):
-        return jsonify({"Invalid email format"}), 400
+        return jsonify({"error": "Invalid email format"}), 400
 
     """ verify unique email """
     if any(user['email'] == data['email'] for user in users):
-        return jsonify({"Email already exist"}), 409
+        return jsonify({"error": "Email already exist"}), 409
 
     """ verify non-empty first name and last name """
     if data['first_name'] == '' or data['last_name'] == '':
-        return jsonify({"First name and Last name cannot be empty"}), 400
+        return jsonify({"error": "First name and Last name cannot be empty"}), 400
 
     new_user = {
         "id": len(users) + 1,
@@ -56,7 +56,7 @@ def get_user(user_id):
     user = next((user for user in users if user["id"] == user_id), None)
     if user:
         return jsonify(user), 200
-    return jsonify({"User not found"}), 404
+    return jsonify({"error": "User not found"}), 404
 
 """ update an existing user """
 @app.route("/users/<user_id>", methods=['PUT'])
@@ -71,7 +71,7 @@ def update_user(user_id):
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
         })
         return jsonify(user), 200
-    return jsonify({"User not found"}), 404
+    return jsonify({"error": "User not found"}), 404
 
 """ delete a user """
 @app.route("/users/<user_id>", methods=['DELETE'])
@@ -81,7 +81,7 @@ def delete_user(user_id):
     if user:
         users = [user for user in users if user["id"] != user_id]
         return '', 204
-    return jsonify({"User not found"}), 404
+    return jsonify({"error": "User not found"}), 404
 
 if __name__ == "__main__":
     app.run()
