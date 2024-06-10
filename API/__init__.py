@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -14,11 +15,18 @@ def home():
 @app.route("/users", methods=['POST'])
 def create_new_user():
     data = request.get_json()
+
+    """ verify valid inputs """
+    if 'email' not in data or 'first name' not in data or 'last name' not in data:
+        return jsonify({"Missing required fields"}), 400
+
     new_user = {
         "id": len(users) + 1,
         "email": data['email'],
         "first_name": data['first_name'],
-        "last_name": data['last_name']
+        "last_name": data['last_name'],
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
     }
     users.append(new_user)
     return jsonify(new_user), 201
@@ -45,8 +53,9 @@ def update_user(user_id):
     if user:
         user.update({
             "email": data['email'],
-             "first_name": data['first_name'],
-            "last_name": data['last_name']
+            "first_name": data['first_name'],
+            "last_name": data['last_name'],
+            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
         })
         return jsonify(user), 200
     return jsonify({"User not found"}), 404
