@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
 from datetime import datetime
+from validate_email import validate_email
 
 app = Flask(__name__)
 
@@ -19,6 +20,14 @@ def create_new_user():
     """ verify valid inputs """
     if 'email' not in data or 'first name' not in data or 'last name' not in data:
         return jsonify({"Missing required fields"}), 400
+
+    """ verify valid email """
+    if not validate_email(data['email']):
+        return jsonify({"Invalid email format"}), 400
+
+    """ verify unique email """
+    if any(user['email'] == data['email'] for user in users):
+        return jsonify({Email already exist}), 400
 
     new_user = {
         "id": len(users) + 1,
