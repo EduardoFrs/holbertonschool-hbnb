@@ -27,7 +27,11 @@ def create_new_user():
 
     """ verify unique email """
     if any(user['email'] == data['email'] for user in users):
-        return jsonify({Email already exist}), 400
+        return jsonify({"Email already exist"}), 400
+
+    """ verify non-empty first name and last name """
+    if data['first_name'] == '' or data['last_name'] == '':
+        return jsonify({"First name and Last name cannot be empty"}), 400
 
     new_user = {
         "id": len(users) + 1,
