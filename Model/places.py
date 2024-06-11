@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from amenities import Amenity
 from reviews import Review
 from typing import List
-import datetime
 from user import User
+from base_model import BaseModel as MyBaseModel
 
 @dataclass
 class Country:
