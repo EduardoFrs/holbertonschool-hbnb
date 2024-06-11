@@ -15,5 +15,5 @@ class BaseModel:
     """
     datetime.utc() is deprecated, have to use timezone.utc
     """
-    created_at: datetime = datetime.now(timezone.utc)
-    updated_at: datetime = datetime.now(timezone.utc)
+    created_at: datetime = datetime.now(timezone)
+    updated_at: datetime = datetime.now(timezone)
