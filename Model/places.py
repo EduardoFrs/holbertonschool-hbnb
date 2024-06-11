@@ -34,5 +34,28 @@ class Place:
     amenities: List[Amenity] = None
     reviews: List[Review] = None # Placeholder for review references
 
+# Error handling for places
+
 def validate_location(self):
-    if self.lat
+    """
+    Latitude/longitude validation
+    """
+    if self.latitude < -90 or self.latitude > 90:
+        raise ValueError("Latitude must be between -90 and 90 degrees.")
+    if self.longitude < -180 or self.longitude > 180:
+        raise ValueError("Longitude must be between -180 and 180 degrees.")
+
+def validate_price(self):
+    """
+    Price validation
+    """
+    if self.price_per_night < 0:
+        raise ValueError("Price can not be negative.")
+
+def validate_max_guests(self):
+    """
+    Max guests validation
+    """
+    if self.max_guests < 0:
+        raise ValueError("Max guests can not be negative.")
+
