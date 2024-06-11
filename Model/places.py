@@ -3,10 +3,14 @@
 from dataclasses import dataclass
 from amenities import Amenity
 from reviews import Review
+from typing import List
+import datetime
+from user import User
 
 @dataclass
 class Country:
     name: str
+
 
 @dataclass
 class City:
@@ -22,10 +26,13 @@ class Place:
     country: Country
     latitude: float
     longitude: float
-    host: str
+    host: User # one-to-one relationship with User
     number_of_rooms: int
     number_of_bathrooms: int
     price_per_night: float
     max_guests: int
-    amenities: list[Amenity] = None
-    reviews: list[Review] = None
+    amenities: List[Amenity] = None
+    reviews: List[Review] = None # Placeholder for review references
+
+def validate_location(self):
+    if self.lat
