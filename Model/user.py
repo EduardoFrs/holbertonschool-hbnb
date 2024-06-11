@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from base_model import BaseModel
 
 @dataclass
-class User:
+class User(BaseModel):
     email: str
     password: str # Implement hashing for secured password
     first_name: str

@@ -5,20 +5,20 @@ from amenities import Amenity
 from reviews import Review
 from typing import List
 from user import User
-from base_model import BaseModel as MyBaseModel
+from base_model import BaseModel
 
 @dataclass
-class Country:
+class Country(BaseModel):
     name: str
 
 
 @dataclass
-class City:
+class City(BaseModel):
     name: str
     country: Country
 
 @dataclass
-class Place:
+class Place(BaseModel):
     name: str
     description: str
     address: str

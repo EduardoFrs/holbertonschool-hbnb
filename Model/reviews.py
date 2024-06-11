@@ -5,7 +5,7 @@ from user import User
 from base_model import BaseModel
 
 @dataclass
-class Review:
+class Review(BaseModel):
     user: User
     place: dict
     rating: float
