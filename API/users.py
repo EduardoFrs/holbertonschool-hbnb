@@ -7,7 +7,7 @@ from validate_email import validate_email
 app = Flask(__name__)
 
 """ initialise api with flask restx """
-api = Api(app, version='1.0', title='Hbnb API Lucas & Eduardo', description='simple Hbnb API')
+api = Api(app, version='1.0', title='Hbnb users API Lucas & Eduardo', description='API for manage users')
 
 """ namespace for users endpoints """
 ns = api.namespace('users', description='user operations')
@@ -65,8 +65,8 @@ class Userlist(Resource):
             "email": data['email'],
             "first_name": data['first_name'],
             "last_name": data['last_name'],
-            "created_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
         }
         users.append(new_user)
         return new_user, 201
@@ -92,7 +92,7 @@ class User(Resource):
     @ns.expect(user_model)
     @ns.marshal_with(user_model)
     def put(self, user_id):
-        """ update and existing user """
+        """ update an existing user """
         data = request.get_json()
         user = next((user for user in users if user["id"] == user_id), None)
         if user:
@@ -100,7 +100,7 @@ class User(Resource):
                 "email": data['email'],
                 "first_name": data['first_name'],
                 "last_name": data['last_name'],
-                "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
+                "updated_at": datetime.utcnow()
             })
             return user
         api.abort(404, "User not found")
