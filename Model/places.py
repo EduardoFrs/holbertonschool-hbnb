@@ -59,3 +59,44 @@ def validate_max_guests(self):
     if self.max_guests < 0:
         raise ValueError("Max guests can not be negative.")
 
+
+
+
+def add_place_to_host(place: Place, user: User):
+    """
+    add place to host
+    """
+    if user.places_hosted is None:
+        user.places_hosted = []
+    user.places_hosted = []
+    user.places_hosted.append(place)
+    place.host = user
+
+def add_review_to_user(review: Review, user: User):
+    """
+    add review to a user
+    """
+    if user.reviews_written is None:
+        user.reviews_written = []
+    user.reviews_written.append(review)
+    review.user = user
+
+def add_review_to_place(review: Review, place: Place):
+    """
+    add review to place
+    """
+    if place.reviews is None:
+        place.reviews = []
+    place.reviews.append(review)
+    review.place = place
+
+def add_amenity(place: Place, amenity: Amenity):
+    """
+    add amenity to place's listing
+    """
+    if place.amenities is None:
+        place.amenities = []
+    place.amenities.append(amenity)
+    place.amenity = amenity
+
+
