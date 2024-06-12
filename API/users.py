@@ -18,8 +18,8 @@ user_model = api.model('user', {
     'email': fields.String(required=True, description='user email adress'),
     'first_name': fields.String(required=True, description='user first name'),
     'last_name': fields.String(required=True, description='user last name'),
-    'created_at': fields.String(readonly=True, description='user creation timestamp'),
-    'updated_at': fields.String(readonly=True, description='user latest update timestamp')
+    'created_at': fields.datetime(readonly=True, description='user creation timestamp'),
+    'updated_at': fields.datetime(readonly=True, description='user latest update timestamp')
 })
 
 """ list for store all users """
