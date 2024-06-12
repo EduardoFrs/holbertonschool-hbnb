@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
-from datatime import datetime
+from datetime import datetime
 
 
 app = Flask(__name__)
