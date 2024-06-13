@@ -5,4 +5,4 @@ from base_model import BaseModel
 
 @dataclass
 class Amenity(BaseModel):
-    name: str
+    name: str = None

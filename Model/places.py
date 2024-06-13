@@ -9,28 +9,28 @@ from base_model import BaseModel
 
 @dataclass
 class Country(BaseModel):
-    name: str
+    name: str = None
 
 
 @dataclass
 class City(BaseModel):
-    name: str
-    country: Country
+    name: str = None
+    country: Country = None
 
 @dataclass
 class Place(BaseModel):
-    name: str
-    description: str
-    address: str
-    city: City
-    country: Country
-    latitude: float
-    longitude: float
-    host: User # one-to-one relationship with User
-    number_of_rooms: int
-    number_of_bathrooms: int
-    price_per_night: float
-    max_guests: int
+    name: str = None
+    description: str = None
+    address: str = None
+    city: City = None
+    country: Country = None
+    latitude: float = None
+    longitude: float = None
+    host: User = None # one-to-one relationship with User
+    number_of_rooms: int = None
+    number_of_bathrooms: int = None
+    price_per_night: float = None
+    max_guests: int = None
     amenities: List[Amenity] = None
     reviews: List[Review] = None # Placeholder for review references
 
