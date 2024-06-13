@@ -7,10 +7,6 @@ from typing import List
 from user import User
 from base_model import BaseModel
 
-@dataclass
-class Country(BaseModel):
-    name: str = None
-
 
 @dataclass
 class City(BaseModel):
