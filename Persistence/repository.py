@@ -91,20 +91,22 @@ class DataManager(IPersistenceManager):
                 del self._data[entity_type]
 
 
-user1 = User(1, "Macron")
-user2 = User(2, "Chirac")
+# user1 = User(1, "president@elysee.fr", "**********", "Emmanuel", "Macron", "Elysée")
+# user2 = User(2, "chirac@ancienspresidents.fr")
 
-data_manager = DataManager()
-data_manager.save(user1)
-data_manager.save(user2)
+# data_manager = DataManager()
+# data_manager.save(user1)
+# data_manager.save(user2)
 
-retrieved_user = data_manager.get(1, "User")
-# print(retrieved_user.name)
-if retrieved_user is not None:
-    print(retrieved_user.name)
-else:
-    print("User not found. ")
+# retrieved_user = data_manager.get(1, User)
+# # print(retrieved_user.name)
+
+# print(user1)
+
+# if retrieved_user is not None:
+#     print(retrieved_user)
+# else:
+#     print("User not found. ")
 
 
-# data_manager.delete(1, "User")
-
+# # data_manager.delete(1, "User")
