@@ -3,7 +3,8 @@
 from abc import ABC, abstractmethod
 import sys
 from Model.user import User
-# sys.path.insert(0, 'C:/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/Model/')
+
+sys.path.insert(0, 'C:/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/Model/')
 
 
 class IPersistenceManager(ABC):
