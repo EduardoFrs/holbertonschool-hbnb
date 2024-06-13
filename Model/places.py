@@ -19,20 +19,60 @@ class City(BaseModel):
 
 @dataclass
 class Place(BaseModel):
+    id: str = None
     name: str = None
     description: str = None
     address: str = None
     city: City = None
     country: Country = None
-    latitude: float = None
-    longitude: float = None
-    host: User = None # one-to-one relationship with User
+    host_id: int = None # one-to-one relationship with User
     number_of_rooms: int = None
     number_of_bathrooms: int = None
     price_per_night: float = None
     max_guests: int = None
     amenities: List[Amenity] = None
     reviews: List[Review] = None # Placeholder for review references
+
+def __init__(self, data:dict):
+    self.__id = data['id']
+    self.__name = data['name']
+    self.__description = data['description']
+    self.__address = data['address']
+    self.__city = data['city']
+    self.__country = data['country']
+    self.__host_id = data['host_id']
+    self.__number_of_rooms = data['number_of_rooms']
+    self.__number_of_bathrooms = data['number_of_bathrooms']
+    self.__price_per_night = data['price_per_night']
+    self.__max_guests = data['max_guests']
+    self.__amenities = data['amenities']
+
+def toJSON(self):
+    return {
+        "id"
+        "name"
+        "address"
+        "city"
+        "country"
+        "host_id"
+        "number_of_rooms"
+        "number_of_bathrooms"
+        "price_per_night"
+        "max_guests"
+        "amenities"
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Error handling for places
 
