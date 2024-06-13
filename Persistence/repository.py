@@ -99,5 +99,12 @@ data_manager.save(user1)
 data_manager.save(user2)
 
 retrieved_user = data_manager.get(1, "User")
-print(retrieved_user.name)
-data_manager.delete(2, "User")
+# print(retrieved_user.name)
+if retrieved_user is not None:
+    print(retrieved_user.name)
+else:
+    print("User not found. ")
+
+
+# data_manager.delete(1, "User")
+

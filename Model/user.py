@@ -10,13 +10,15 @@ from Model.base_model import BaseModel
 
 @dataclass
 class User(BaseModel):
-    email: str
-    password: str # Implement hashing for secured password
-    first_name: str
-    last_name: str
+
+    email: str = None
+    password: str = None # Implement hashing for secured password
+    first_name: str = None
+    last_name: str = None
     places_hosted: list[dict] = None
-    reviews_written: list[dict] = None # Placeholder for place references
+    reviews_written: list[dict] = None
 
-print(sys.path)
-
-User()
+    """
+    Il faut déclarer les var comme ça sinon "TypeError: User.__init__() takes from 1 to 2 positional arguments but 3 were given"
+    quand on veut register un nouvel user.
+    """

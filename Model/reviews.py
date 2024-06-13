@@ -6,7 +6,7 @@ from base_model import BaseModel
 
 @dataclass
 class Review(BaseModel):
-    user: User
-    place: dict
-    rating: float
-    content: str
+    user: User = None
+    place: dict = None
+    rating: float = None
+    content: str = None
