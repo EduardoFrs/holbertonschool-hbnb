@@ -1,10 +1,12 @@
 #!/usr/bin/python3
-""" from Model.base_model import User """
+
 from abc import ABC, abstractmethod
 import sys
-from Model.user import User
+import os
 
-sys.path.insert(0, 'C:/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/Model/')
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from Model.user import User
 
 
 class IPersistenceManager(ABC):

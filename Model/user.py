@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 
 from dataclasses import dataclass
-from base_model import BaseModel
 import sys
-import Model
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from Model.base_model import BaseModel
 
 @dataclass
 class User(BaseModel):
@@ -16,4 +19,4 @@ class User(BaseModel):
 
 print(sys.path)
 
-Model.User()
+User()

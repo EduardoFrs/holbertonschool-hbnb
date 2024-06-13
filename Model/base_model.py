@@ -5,7 +5,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from pytz import timezone # pip import pytz # for timestamp to local timezone
 
-Base = dataclass(frozen=True)
+Base = dataclass
 
 @Base
 class BaseModel:
