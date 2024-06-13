@@ -17,3 +17,10 @@ class User(BaseModel):
     password: str = None # Implement hashing for secured password
     first_name: str = None
     last_name: str = None
+
+    def __init__(self, data:dict):
+        # data validation
+        if not isinstance(data['username'], str):
+            raise ValueError("Username must be a string.")
+        if not data['username']:
+            raise ValueError("Username cannot be empty")

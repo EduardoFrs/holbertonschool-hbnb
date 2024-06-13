@@ -6,12 +6,8 @@ from reviews import Review
 from typing import List
 from user import User
 from base_model import BaseModel
-
-
-@dataclass
-class City(BaseModel):
-    name: str = None
-    country: Country = None
+from countries import Country
+from cities import City
 
 @dataclass
 class Place(BaseModel):
