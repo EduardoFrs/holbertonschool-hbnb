@@ -114,8 +114,8 @@ class CityList(Resource):
             'id': city_id_counter,
             'name': data['name'],
             'country_code': data['country_code'],
-            'created_at': datetime.utcnow(),
-            'updated_at': datetime.utcnow()
+            'created_at': datetime.now().strftime("%Y-%m-%d %H:%M"),
+            'updated_at': datetime.now().strftime("%Y-%m-%d %H:%M")
         }
         cities.append(new_city)
         city_id_counter += 1
@@ -149,7 +149,7 @@ class CityDetails(Resource):
             cities[city_index].update({
                 'name': data['name'],
                 'country_code': data['country_code'],
-                'updated_at': datetime.utcnow()
+                'updated_at': datetime.now().strftime("%Y-%m-%d %H:%M")
             })
             return cities[city_index]
         else:

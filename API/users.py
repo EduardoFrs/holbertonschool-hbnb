@@ -65,8 +65,8 @@ class Userlist(Resource):
             "email": data['email'],
             "first_name": data['first_name'],
             "last_name": data['last_name'],
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow()
+            "created_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
         }
         users.append(new_user)
         return new_user, 201
@@ -100,7 +100,7 @@ class User(Resource):
                 "email": data['email'],
                 "first_name": data['first_name'],
                 "last_name": data['last_name'],
-                "updated_at": datetime.utcnow()
+                "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
             })
             return user
         api.abort(404, "User not found")

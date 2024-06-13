@@ -48,8 +48,8 @@ class AmenityList(Resource):
         new_amenity = {
             'id': next_id,
             'name': data['name'],
-            'created_at': datetime.utcnow(),
-            'uptaded_at': datetime.utcnow()
+            'created_at': datetime.now().strftime("%Y-%m-%d %H:%M"),
+            'uptaded_at': datetime.now().strftime("%Y-%m-%d %H:%M")
         }
         next_id += 1
         amenities.append(new_amenity)
@@ -81,7 +81,7 @@ class Amenity(Resource):
             if any(amenity['name'] == data['name'] and amenity['id'] != id for amenity in amenities):
                 api.abort(409, 'Amenity already exist')
             amenity['name'] = data['name']
-        amenity['uptaded_at'] = datetime.utcnow()
+        amenity['uptaded_at'] = datetime.now().strftime("%Y-%m-%d %H:%M")
         return amenity, 200
 
     @ns.doc('delete_amenity')
