@@ -3,7 +3,7 @@ from base_model import BaseModel
 
 @dataclass
 class Country(BaseModel):
-    name: str = None
+    _name: str = None
     _country_code: str = None
 
 
