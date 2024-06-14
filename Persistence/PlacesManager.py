@@ -1,4 +1,4 @@
-from Persistence.repository import DataManager
+from DataManager import DataManager
 
 class PlacesManager(DataManager):
     def __init__(self):

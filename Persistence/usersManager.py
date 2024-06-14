@@ -1,5 +1,4 @@
-from Persistence.repository import DataManager
-from ..Model.user import User
+from DataManager import DataManager
 
 class UserManager(DataManager):
     # Manages users data persistence
@@ -25,3 +24,5 @@ class UserManager(DataManager):
 
     def delete_user(self, user_id: str) -> bool:
         return self.delete("user", user_id)
+
+    #what

@@ -1,4 +1,4 @@
-from Persistence.repository import DataManager
+from DataManager import DataManager
 
 class CountriesManager(DataManager):
     def __init__(self):

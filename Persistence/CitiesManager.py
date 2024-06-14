@@ -1,4 +1,4 @@
-from Persistence.repository import DataManager
+from DataManager import DataManager
 
 class CitiesManager(DataManager):
     def __init__(self):
