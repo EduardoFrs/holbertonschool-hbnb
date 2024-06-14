@@ -47,16 +47,13 @@ class DataManager(IPersistenceManager):
 
 
     def save(self, entity: object):
-        # Gets entity's Type/ID then stores it in dictionary
+        # Saves an entity object to corresponding JSON file
+        # Args: entity(object) to be saved
+        # Raises: typeerror if entity object doesn't have ID attribute
         entity_type = type(entity).__name__ # Get entity type from oject
         entity_id = getattr(entity, "id") # Assuming entities have an ID attribute
         self._data.setdefault(entity_type, {}).get(entity_id)
         self._save_data()
-
-
-
-
-
 
 
 
