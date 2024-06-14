@@ -1,4 +1,3 @@
-
 import sys
 import os
 import json
@@ -9,25 +8,20 @@ from IPersistenceManager import IPersistenceManager
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class DataManager(IPersistenceManager):
-
     # Concrete implementation of persistence manager using in-memory dictionary
-
     def __init__(self):
         config = ConfigParser()
         config.read("data/config.json")
         self._data_path = config["DEFAULT"]["data_path"]
         self._load_data()
         self.supported_entity_types = []
-
         # dynamic registration of entity types
     def register_entity_type(self, entity_type: str):
         self._supported_entity_types.append(entity_type)
 
-
     def get_supported_entity_types(self):
         # return list of supported entities
         return list(self.supported_entity_types)
-
 
     def _load_data(self):
         for entity_type in self.get_support_entity_types():
@@ -45,7 +39,6 @@ class DataManager(IPersistenceManager):
             with open(file_path, "w", encoding="utf-8") as file:
                 json.dump(data, file, indent=4)
 
-
     def save(self, entity: object):
         # Saves an entity object to corresponding JSON file
         # Args: entity(object) to be saved
@@ -54,7 +47,6 @@ class DataManager(IPersistenceManager):
         entity_id = getattr(entity, "id") # Assuming entities have an ID attribute
         self._data.setdefault(entity_type, {}).get(entity_id)
         self._save_data()
-
 
     def get(self, entity_type: str, entity_id: str) -> object:
         # Retrieve entity based on type / ID
@@ -69,25 +61,30 @@ class DataManager(IPersistenceManager):
         # Args: entity(object)
         # Returns: bool: True if entity updated, or false (entity not found)
         # If true, updates in-memory data
+        # Maybe raise exception?
         entity_type = type(entity).__name__
         entity_id = getattr(entity, "id")
         if not self.get(entity_type, entity_id):
             return False | print("Entity not found")
-
         if self.get(entity_id, entity_type):
             self._data[entity_type][entity_id] = entity
-            self._sava_data() # updates the JSON
+            self._save_data() # updates the JSON
             return True
 
-
-
-
-
-
-    def delete(self, entity_id: str, entity_type: str):
-        # Deletes entity based on type/ID
-        # Removes the key
-        if entity_type in self._data:
+    def delete(self, entity_type: str, entity_id: str):
+        # Deletes entity from data store and persist changes to JSON
+        # Args: entity_type (str)
+        #        entity_id (str)
+        # Returns: bool: True if deleted successfully or False
+        # Raises KeyError if ID doesn't exist
+        if entity_type not in self._data:
+            return False
+        try:
             del self._data[entity_type][entity_id]
-            if not self._data[entity_type]:
+        except KeyError:
+            return False
+        # After deleting entity, checks if entity_type is in _data dict is empty to remove it so it stays clean
+        if not self._data[entity_type]:
                 del self._data[entity_type]
+                self._save_data()
+                return True
