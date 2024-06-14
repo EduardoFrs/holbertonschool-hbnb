@@ -3,7 +3,7 @@ import sys
 import os
 import json
 from configparser import ConfigParser
-import IPersistenceManager
+from IPersistenceManager import IPersistenceManager
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -14,15 +14,30 @@ class DataManager(IPersistenceManager):
     """
     Concrete implementation of persistence manager using in-memory dictionary
     """
+    supported_entity_types = ["username", "email", "password"]
+
     def __init__(self):
         config = ConfigParser()
         config.read("config.json")
         self._data_path = config["DEFAULT"]["data_path"]
         self._load_data()
 
+        # dynamic registration of entity types
+    def register_entity_type(self, entity_type: str):
+        self._supported_entity_types.add(entity_type)
+
+
     def get_support_entity_types(self):
         # return list of supported entities
-        pass
+        return list(self.supported_entity_types)
+
+
+
+
+
+
+
+
 
     def _load_data(self):
         for entity_type in self.get_support_entity_types():
@@ -34,13 +49,31 @@ class DataManager(IPersistenceManager):
             except (FileNotFoundError, json.JSONDecodeError):
                 pass
 
+    def save_data(self):
+        for entity_type, data in self._data.items():
+            file_path = BASE_PATH
+            with open(file_path, "w", encoding="utf-8") as file:
+                json.dump(data, file, indent=4)
+
 
     def save(self, entity: object):
         # Gets entity's Type/ID then stores it in dictionary
-
         entity_type = type(entity).__name__ # Get entity type from oject
         entity_id = getattr(entity, "id") # Assuming entities have an ID attribute
         self._data.setdefault(entity_type, {}).get(entity_id)
+        self._save_data()
+
+
+
+
+
+
+
+
+
+
+
+
 
     def get(self, entity_id: str, entity_type: str):
         # Retrieve entity based on ID / type
