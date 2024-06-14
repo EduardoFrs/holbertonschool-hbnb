@@ -27,7 +27,7 @@ class DataManager(IPersistenceManager):
         self._supported_entity_types.add(entity_type)
 
 
-    def get_support_entity_types(self):
+    def get_supported_entity_types(self):
         # return list of supported entities
         return list(self.supported_entity_types)
 
