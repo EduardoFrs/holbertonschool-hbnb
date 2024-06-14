@@ -4,6 +4,8 @@ from flask_restx import Api, Resource, fields
 from datetime import datetime
 from validate_email import validate_email
 
+# CHANGEMENT TEST POUR CHECK SI BRANCH OK __
+
 app = Flask(__name__)
 
 """ initialise api with flask restx """
@@ -14,7 +16,7 @@ ns = api.namespace('users', description='user operations')
 
 """ data model for users """
 user_model = api.model('user', {
-    'id': fields.Integer(readonly=True, description='user unique id'),
+    'id': fields.Integer(readonly=True, description='unique user id'),
     'email': fields.String(required=True, description='user email adress'),
     'first_name': fields.String(required=True, description='user first name'),
     'last_name': fields.String(required=True, description='user last name'),
