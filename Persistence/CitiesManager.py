@@ -15,4 +15,4 @@ class CitiesManager(DataManager):
         return self.update(city)
 
     def delete_city(self, city_id: str) -> bool:
-        return self.delete(city_id)
+        return self.delete("city", city_id)

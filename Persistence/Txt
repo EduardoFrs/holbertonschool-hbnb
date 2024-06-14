@@ -1,0 +1,13 @@
+All manager classes inherit from DataManager, that ensure everything is persistent to JSON file through the _save_data() method.
+/data for JSON files including config
+Each entity has its own JSON file
+
+
+
+Each class registers its specific entity type eg "user" "city"
+Methods for interaction (get, save, update, delete) follow a similar pattern using methods from DataManager
+Data persistence is handled by the DataManager class, ensuring consistency and avoiding code repetition.
+
+To do:
+More error handling -> data validation for example.
+Additional functionnalities specific to their entities like filtering cities by country in the CountriesManager.
