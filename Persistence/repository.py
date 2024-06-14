@@ -5,26 +5,27 @@ import json
 from configparser import ConfigParser
 from IPersistenceManager import IPersistenceManager
 
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class BASE_PATH:
-    "/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/data"
+    "/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/data/config.json"
 
 class DataManager(IPersistenceManager):
     """
     Concrete implementation of persistence manager using in-memory dictionary
     """
     supported_entity_types = ["username", "email", "password"]
-
     def __init__(self):
         config = ConfigParser()
-        config.read("config.json")
+        config.read("data/config.json")
         self._data_path = config["DEFAULT"]["data_path"]
         self._load_data()
+        self.supported_entity_types = []
 
         # dynamic registration of entity types
     def register_entity_type(self, entity_type: str):
-        self._supported_entity_types.add(entity_type)
+        self._supported_entity_types.append(entity_type)
 
 
     def get_supported_entity_types(self):
