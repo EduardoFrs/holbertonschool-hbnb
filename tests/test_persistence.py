@@ -1,13 +1,12 @@
 import unittest
 import sys
 import os
-from Persistence.repository import DataManager
+from ..Persistence.DataManager import DataManager
 from unittest.mock import MagicMock, patch
 import json
 from unittest import mock
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 
 class TestDataManager(unittest.TestCase):
 

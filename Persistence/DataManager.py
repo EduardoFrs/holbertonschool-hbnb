@@ -2,7 +2,7 @@ import sys
 import os
 import json
 from configparser import ConfigParser
-from IPersistenceManager import IPersistenceManager
+from .IPersistenceManager import IPersistenceManager
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -36,7 +36,7 @@ class DataManager(IPersistenceManager):
 
     def save_data(self):
         for entity_type, data in self._data.items():
-            file_path = os.path.join(self._data_path, f"{entity_type}.json")
+            file_path = os.path.join(self._data_path, f"{entity_type}.json") # creates json file for entity
             with open(file_path, "w", encoding="utf-8") as file:
                 json.dump(data, file, indent=4)
 
