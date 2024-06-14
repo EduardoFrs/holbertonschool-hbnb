@@ -8,14 +8,10 @@ from IPersistenceManager import IPersistenceManager
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-class BASE_PATH:
-    "/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/data/config.json"
-
 class DataManager(IPersistenceManager):
     """
     Concrete implementation of persistence manager using in-memory dictionary
     """
-    supported_entity_types = ["username", "email", "password"]
     def __init__(self):
         config = ConfigParser()
         config.read("data/config.json")
@@ -33,26 +29,19 @@ class DataManager(IPersistenceManager):
         return list(self.supported_entity_types)
 
 
-
-
-
-
-
-
-
     def _load_data(self):
         for entity_type in self.get_support_entity_types():
-            file_path = f"{BASE_PATH}/{entity_type}.json"
+            file_path = os.path.join(self._data_path, f"{entity_type}.json")
             try:
                 with open(file_path, "r", encoding="utf-8") as file:
                     data = json.load(file)
                     self.data[entity_type] = data
             except (FileNotFoundError, json.JSONDecodeError):
-                pass
+                raise TypeError("File Error.")
 
     def save_data(self):
         for entity_type, data in self._data.items():
-            file_path = BASE_PATH
+            file_path = os.path.join(self._data_path, f"{entity_type}.json")
             with open(file_path, "w", encoding="utf-8") as file:
                 json.dump(data, file, indent=4)
 
