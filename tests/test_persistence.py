@@ -36,7 +36,7 @@ class TestDataManager(unittest.TestCase):
     # Mock data
     data_path = "data/"
     entity_type = "user"
-    entity_data = {"id": 1, "name": "Pipi caca"}
+    entity_data = {"id": 1, "name": "Vélo à 2 roues"}
     mock_file = MagicMock()
     mock_file.read.return_value = json.dumps(entity_data)
     mock_open.return_value = mock_file
