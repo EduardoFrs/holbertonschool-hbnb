@@ -1,7 +1,7 @@
 import unittest
 import sys
 import os
-from ..Persistence.repository import DataManager
+from Persistence.repository import DataManager
 from unittest.mock import MagicMock, patch
 import json
 from unittest import mock
@@ -36,7 +36,7 @@ class TestDataManager(unittest.TestCase):
     # Mock data
     data_path = "data/"
     entity_type = "user"
-    entity_data = {"id": 1, "name": "Emmanuel Macron"}
+    entity_data = {"id": 1, "name": "Pipi caca"}
     mock_file = MagicMock()
     mock_file.read.return_value = json.dumps(entity_data)
     mock_open.return_value = mock_file
@@ -78,7 +78,7 @@ class TestDataManager(unittest.TestCase):
     # Mock entity object
     entity_type = "user"
     entity_id = 1
-    entity_data = {"name": "Jane Doe"}
+    entity_data = {"name": "Kilian Mbappé"}
     entity = MagicMock()
     entity.__name__ = entity_type
     entity.id = entity_id
@@ -99,6 +99,6 @@ class TestDataManager(unittest.TestCase):
     # Mock entity object
     entity_type = "user"
     entity_id = 1
-    entity_data = {"name": "Jane Doe"}
+    entity_data = {"name": "Lionel Messi"}
     entity = MagicMock()
     entity.__name__ = entity_type
