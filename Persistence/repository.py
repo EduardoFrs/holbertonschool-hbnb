@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 class DataManager(IPersistenceManager):
     # Concrete implementation of persistence manager using in-memory dictionary
     def __init__(self):
+        # stores the data path retrieved in config.json
         config = ConfigParser()
         config.read("data/config.json")
         self._data_path = config["DEFAULT"]["data_path"]
@@ -61,7 +62,6 @@ class DataManager(IPersistenceManager):
         # Args: entity(object)
         # Returns: bool: True if entity updated, or false (entity not found)
         # If true, updates in-memory data
-        # Maybe raise exception?
         entity_type = type(entity).__name__
         entity_id = getattr(entity, "id")
         if not self.get(entity_type, entity_id):
@@ -88,3 +88,4 @@ class DataManager(IPersistenceManager):
                 del self._data[entity_type]
                 self._save_data()
                 return True
+
