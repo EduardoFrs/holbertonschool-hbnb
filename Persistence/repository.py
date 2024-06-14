@@ -9,9 +9,9 @@ from IPersistenceManager import IPersistenceManager
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class DataManager(IPersistenceManager):
-    """
-    Concrete implementation of persistence manager using in-memory dictionary
-    """
+
+    # Concrete implementation of persistence manager using in-memory dictionary
+
     def __init__(self):
         config = ConfigParser()
         config.read("data/config.json")
@@ -56,22 +56,33 @@ class DataManager(IPersistenceManager):
         self._save_data()
 
 
-
-
-
-
-
-
-    def get(self, entity_id: str, entity_type: str):
-        # Retrieve entity based on ID / type
+    def get(self, entity_type: str, entity_id: str) -> object:
+        # Retrieve entity based on type / ID
+        # Args: entity_type (str)
+        #       entity_id (str)
+        # Returns: object found or None
+        entity_data = self.data.get(entity_type, {})
         return self._data.get(entity_type, {}).get(entity_id)
 
     def update(self, entity: object):
         # Updates an existing entity (if found)
+        # Args: entity(object)
+        # Returns: bool: True if entity updated, or false (entity not found)
+        # If true, updates in-memory data
         entity_type = type(entity).__name__
         entity_id = getattr(entity, "id")
+        if not self.get(entity_type, entity_id):
+            return False | print("Entity not found")
+
         if self.get(entity_id, entity_type):
             self._data[entity_type][entity_id] = entity
+            self._sava_data() # updates the JSON
+            return True
+
+
+
+
+
 
     def delete(self, entity_id: str, entity_type: str):
         # Deletes entity based on type/ID
