@@ -1,41 +1,26 @@
-#!/usr/bin/python3
 
-from abc import ABC, abstractmethod
 import sys
 import os
+import json
+from configparser import ConfigParser
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from Model.user import User
-
-
-class IPersistenceManager(ABC):
-    """
-    Interface outlining methods for data persistence operations
-    """
-    @abstractmethod
-    def save(self, entity: object):
-        pass
-
-    @abstractmethod
-    def get(self, entity_id: str, entity_type: str):
-        pass
-
-    @abstractmethod
-    def update(self, entity: object):
-        pass
-
-    @abstractmethod
-    def delete(self, entity_id: str, entity_type: str):
-        pass
+class BASE_PATH:
+    pass
 
 class DataManager(IPersistenceManager):
     """
     Concrete implementation of persistence manager using in-memory dictionary
     """
     def __init__(self):
-        self._data = {} # Dictionary where entities are stored
-                        # {entity_type: {id: entity}}
+        config = ConfigParser()
+        config.read("config.json")
+        self._data_path = config["DEFAULT"]["data_path"]
+        self._loacd_data()
+
+    def _load_data(self):
+        pass
 
 
     def save(self, entity: object):
@@ -63,24 +48,3 @@ class DataManager(IPersistenceManager):
             del self._data[entity_type][entity_id]
             if not self._data[entity_type]:
                 del self._data[entity_type]
-
-
-# user1 = User(1, "president@elysee.fr", "**********", "Emmanuel", "Macron", "Elysée")
-# user2 = User(2, "chirac@ancienspresidents.fr")
-
-# data_manager = DataManager()
-# data_manager.save(user1)
-# data_manager.save(user2)
-
-# retrieved_user = data_manager.get(1, User)
-# # print(retrieved_user.name)
-
-# print(user1)
-
-# if retrieved_user is not None:
-#     print(retrieved_user)
-# else:
-#     print("User not found. ")
-
-
-# # data_manager.delete(1, "User")
