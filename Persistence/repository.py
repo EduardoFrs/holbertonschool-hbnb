@@ -3,11 +3,12 @@ import sys
 import os
 import json
 from configparser import ConfigParser
+import IPersistenceManager
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class BASE_PATH:
-    pass
+    "/mnt/c/Users/HSP/Documents/Holberton Python/holbertonschool-hbnb/data"
 
 class DataManager(IPersistenceManager):
     """
@@ -17,10 +18,21 @@ class DataManager(IPersistenceManager):
         config = ConfigParser()
         config.read("config.json")
         self._data_path = config["DEFAULT"]["data_path"]
-        self._loacd_data()
+        self._load_data()
+
+    def get_support_entity_types(self):
+        # return list of supported entities
+        pass
 
     def _load_data(self):
-        pass
+        for entity_type in self.get_support_entity_types():
+            file_path = f"{BASE_PATH}/{entity_type}.json"
+            try:
+                with open(file_path, "r", encoding="utf-8") as file:
+                    data = json.load(file)
+                    self.data[entity_type] = data
+            except (FileNotFoundError, json.JSONDecodeError):
+                pass
 
 
     def save(self, entity: object):
