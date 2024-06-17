@@ -1,15 +1,9 @@
 from flask import Flask, request, jsonify, abort
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Namespace, Resource, fields
 from datetime import datetime
 import uuid
 
-app = Flask(__name__)
-
-"""initialize api with flask restx"""
-api = Api(app, version='1.0', title='Hbnb Places API Lucas & Eduardo', description='API for managing places')
-
-"""namespace for places endpoints"""
-ns = api.namespace('places', description='Places operations')
+api = Namespace('places', description='Places operations')
 
 """ data model for places """
 place_model = api.model('Place', {
@@ -32,8 +26,6 @@ place_model = api.model('Place', {
 
 """list for storing all places"""
 places = {}
-cities = {1: 'City1', 2: 'City2'}  # Example pre-loaded cities
-amenities = {str(uuid.uuid4()): 'Amenity1', str(uuid.uuid4()): 'Amenity2'}  # Example pre-loaded amenities
 
 """function to validate geographical coordinates"""
 def validate_coordinates(latitude, longitude):
@@ -53,17 +45,17 @@ def validate_amenities(amenity_ids):
         if amenity_id not in amenities:
             abort(400, f"Amenity ID does not exist: {amenity_id}")
 
-@ns.route('/')
+@api.route('/')
 class PlaceList(Resource):
-    @ns.doc('list_places')
-    @ns.marshal_list_with(place_model)
+    @api.doc('list_places')
+    @api.marshal_list_with(place_model)
     def get(self):
         """Retrieve a list of all places"""
         return list(places.values()), 200
 
-    @ns.doc('create_place')
-    @ns.expect(place_model)
-    @ns.marshal_with(place_model, code=201)
+    @api.doc('create_place')
+    @api.expect(place_model)
+    @api.marshal_with(place_model, code=201)
     def post(self):
         """Create a new place"""
         data = request.get_json()
@@ -79,20 +71,20 @@ class PlaceList(Resource):
         places[place_id] = data
         return data, 201
 
-@ns.route('/<string:id>')
-@ns.response(404, 'Place not found')
+@api.route('/<string:id>')
+@api.response(404, 'Place not found')
 class Place(Resource):
-    @ns.doc('get_place')
-    @ns.marshal_with(place_model)
+    @api.doc('get_place')
+    @api.marshal_with(place_model)
     def get(self, id):
         """Retrieve detailed information about a specific place"""
         if id not in places:
             abort(404, "Place not found")
         return places[id], 200
 
-    @ns.doc('update_place')
-    @ns.expect(place_model)
-    @ns.marshal_with(place_model)
+    @api.doc('update_place')
+    @api.expect(place_model)
+    @api.marshal_with(place_model)
     def put(self, id):
         """Update an existing place’s information"""
         if id not in places:
@@ -107,14 +99,11 @@ class Place(Resource):
         places[id].update(data)
         return places[id], 200
 
-    @ns.doc('delete_place')
-    @ns.response(204, 'Place deleted')
+    @api.doc('delete_place')
+    @api.response(204, 'Place deleted')
     def delete(self, id):
         """Delete a specific place"""
         if id not in places:
             abort(404, "Place not found")
         del places[id]
         return '', 204
-
-if __name__ == '__main__':
-    app.run(debug=True)

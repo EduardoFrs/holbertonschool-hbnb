@@ -1,16 +1,10 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, fields, abort
+from flask_restx import Api, Resource, Namespace, fields, abort
 from datetime import datetime
 import uuid
 
-app = Flask(__name__)
-
-""" initialise API with Flask-Restx """
-api = Api(app, version='1.0', title='Hbnb reviews API Lucas & Eduardo', description='API for manage reviews')
-
-""" namespace for review endpoints """
-ns = api.namespace('reviews', description='Review operations')
+api = Namespace('reviews', description='Review operations')
 
 """ Sample data for storing reviews """
 reviews = []
@@ -45,12 +39,12 @@ def validate_review_data(data):
             errors.append('Rating must be between 1 and 5')
     return errors
 
-@ns.route('/<review_id>')
-@ns.response(404, 'Review not found')
-@ns.param('review_id', 'The review id')
+@api.route('/<review_id>')
+@api.response(404, 'Review not found')
+@api.param('review_id', 'The review id')
 class Review(Resource):
-    @ns.doc('get_review')
-    @ns.marshal_with(review_model)
+    @api.doc('get_review')
+    @api.marshal_with(review_model)
     def get(self, review_id):
         """ Get details of a specific review """
         review_index = get_review_index(review_id)
@@ -59,9 +53,9 @@ class Review(Resource):
         else:
             api.abort(404, "Review not found")
 
-    @ns.doc('update_review')
-    @ns.expect(review_model)
-    @ns.marshal_with(review_model)
+    @api.doc('update_review')
+    @api.expect(review_model)
+    @api.marshal_with(review_model)
     def put(self, review_id):
         """ Update an existing review """
         review_index = get_review_index(review_id)
@@ -81,8 +75,8 @@ class Review(Resource):
         else:
             api.abort(404, "Review not found")
 
-    @ns.doc('delete_review')
-    @ns.response(204, 'Review deleted')
+    @api.doc('delete_review')
+    @api.response(204, 'Review deleted')
     def delete(self, review_id):
         """ Delete a specific review """
         global reviews
@@ -93,12 +87,12 @@ class Review(Resource):
         else:
             api.abort(404, "Review not found")
 
-@ns.route('/places/<place_id>/reviews')
-@ns.param('place_id', 'The place id')
+@api.route('/places/<place_id>/reviews')
+@api.param('place_id', 'The place id')
 class PlaceReviewList(Resource):
-    @ns.doc('create_place_review')
-    @ns.expect(review_model)
-    @ns.marshal_with(review_model, code=201)
+    @api.doc('create_place_review')
+    @api.expect(review_model)
+    @api.marshal_with(review_model, code=201)
     def post(self, place_id):
         """ Create a new review for a specified place """
         data = request.json
@@ -119,21 +113,21 @@ class PlaceReviewList(Resource):
         reviews.append(new_review)
         return new_review, 201
 
-@ns.route('/users/<user_id>/reviews')
-@ns.param('user_id', 'The user id')
+@api.route('/users/<user_id>/reviews')
+@api.param('user_id', 'The user id')
 class UserReviewList(Resource):
-    @ns.doc('get_user_reviews')
-    @ns.marshal_list_with(review_model)
+    @api.doc('get_user_reviews')
+    @api.marshal_list_with(review_model)
     def get(self, user_id):
         """ Retrieve all reviews written by a specific user """
         user_reviews = [review for review in reviews if review['user_id'] == user_id]
         return user_reviews
 
-@ns.route('/places/<place_id>/reviews')
-@ns.param('place_id', 'The place id')
+@api.route('/places/<place_id>/reviews')
+@api.param('place_id', 'The place id')
 class PlaceReviewList(Resource):
-    @ns.doc('get_place_reviews')
-    @ns.marshal_list_with(review_model)
+    @api.doc('get_place_reviews')
+    @api.marshal_list_with(review_model)
     def get(self, place_id):
         """ Retrieve all reviews for a specific place """
         place_reviews = [review for review in reviews if review['place_id'] == place_id]

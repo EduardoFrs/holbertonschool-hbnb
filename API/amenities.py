@@ -1,16 +1,10 @@
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Namespace, Resource, fields
 from datetime import datetime
 import uuid
 
 
-app = Flask(__name__)
-
-""" initialise api with flask restx """
-api = Api(app, version='1.0', title='Hbnb amenities API Lucas & Eduardo', description='API for manage amenities')
-
-""" namespace for amenities endpoints """
-ns = api.namespace('amenities', description='manage amenities operations')
+api = Namespace('amenities', description='manage amenities operations')
 
 
 """ data model for amenities """
@@ -25,17 +19,17 @@ amenities_model = api.model('amenity', {
 amenities = []
 
 
-@ns.route('/amenities')
+@api.route('/amenities')
 class AmenityList(Resource):
-    @ns.doc('list_amenities')
-    @ns.marshal_list_with(amenities_model)
+    @api.doc('list_amenities')
+    @api.marshal_list_with(amenities_model)
     def get(self):
         """get list of all amenities"""
         return amenities, 200
 
-    @ns.doc('create_amenity')
-    @ns.expect(amenities_model)
-    @ns.marshal_list_with(amenities_model, code=201)
+    @api.doc('create_amenity')
+    @api.expect(amenities_model)
+    @api.marshal_list_with(amenities_model, code=201)
     def post(self):
         """create new amenity"""
         global next_id
@@ -55,12 +49,12 @@ class AmenityList(Resource):
         amenities.append(new_amenity)
         return new_amenity, 201
 
-@ns.route('/amenities/<amenity_id>')
-@ns.response(404, 'Amenity not found')
-@ns.param('id', 'amenity id')
+@api.route('/amenities/<amenity_id>')
+@api.response(404, 'Amenity not found')
+@api.param('id', 'amenity id')
 class Amenity(Resource):
-    @ns.doc('get_amenity')
-    @ns.marshal_with(amenities_model)
+    @api.doc('get_amenity')
+    @api.marshal_with(amenities_model)
     def get(self, id):
         """get informations about specific amenity"""
         amenity = next((amenity for amenity in amenities if amenity['id'] == id), None)
@@ -68,9 +62,9 @@ class Amenity(Resource):
             api.abort(404, 'amenity not found')
         return amenity, 200
 
-    @ns.doc('update_amenity')
-    @ns.expect(amenities_model)
-    @ns.marshal_with(amenities_model)
+    @api.doc('update_amenity')
+    @api.expect(amenities_model)
+    @api.marshal_with(amenities_model)
     def put(self, id):
         """update existing amenity"""
         data = request.get_json()
@@ -84,8 +78,8 @@ class Amenity(Resource):
         amenity['uptaded_at'] = datetime.now().strftime("%Y-%m-%d %H:%M")
         return amenity, 200
 
-    @ns.doc('delete_amenity')
-    @ns.response(204, 'amenity deleted')
+    @api.doc('delete_amenity')
+    @api.response(204, 'amenity deleted')
     def delete(self, id):
         """delete a specific amenity"""
         global amenities
@@ -96,5 +90,5 @@ class Amenity(Resource):
         amenities = [amenity for amenity in amenities if amenity['id'] != id]
         return '', 204
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()
