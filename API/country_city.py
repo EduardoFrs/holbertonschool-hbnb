@@ -1,17 +1,13 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Namespace, Resource, fields
 import geonamescache
 from datetime import datetime
 import uuid
 
-app = Flask(__name__)
 
-""" initialise api with flask restx """
-api = Api(app, version='1.0', title='Hbnb city and country API Lucas & Eduardo', description='API for manage cities and coutries')
+api = Namespace('city_country', description='manage interaction for city and country')
 
-""" namespace for city and country endpoint """
-ns = api.namespace('city_country', description='manage interaction for city and country')
 
 """import preloaded countries """
 gc = geonamescache.GeonamesCache()
@@ -57,20 +53,20 @@ def validate_city_data(data):
     return errors
 
 
-@ns.route('/countries')
+@api.route('/countries')
 class CountryList(Resource):
-    @ns.doc('list_countries')
-    @ns.marshal_list_with(country_model)
+    @api.doc('list_countries')
+    @api.marshal_list_with(country_model)
     def get(self):
         """get list of all countries"""
         return [{'name': name, 'code': code} for code, name in countries.items()]
 
-@ns.route('/countries/<country_code>')
-@ns.response(404, 'Country not found')
-@ns.param('country_code', 'the code of the country')
+@api.route('/countries/<country_code>')
+@api.response(404, 'Country not found')
+@api.param('country_code', 'the code of the country')
 class CountryDetails(Resource):
-    @ns.doc('get_country')
-    @ns.marshal_with(country_model)
+    @api.doc('get_country')
+    @api.marshal_with(country_model)
     def get(self, country_code):
         """get details of a specific country by is code"""
         country_name = get_country_name(country_code)
@@ -79,29 +75,29 @@ class CountryDetails(Resource):
         else:
             api.abort(404, "Country not found")
 
-@ns.route('/countries/<country_code>/cities')
-@ns.response(404, 'Country not found')
-@ns.param('country_code', 'the code of the country')
+@api.route('/countries/<country_code>/cities')
+@api.response(404, 'Country not found')
+@api.param('country_code', 'the code of the country')
 class CountryCities(Resource):
-    @ns.doc('get_country_cities')
-    @ns.marshal_list_with(city_model)
+    @api.doc('get_country_cities')
+    @api.marshal_list_with(city_model)
     def get(self, country_code):
         """get all cities of a country"""
         if country_code not in countries:
             api.abort(404, "Country not found")
         return [city for city in cities if city['country_code'] == country_code]
 
-@ns.route('/cities')
+@api.route('/cities')
 class CityList(Resource):
-    @ns.doc('list_cities')
-    @ns.marshal_list_with(city_model)
+    @api.doc('list_cities')
+    @api.marshal_list_with(city_model)
     def get(self):
         """list of all cities"""
         return cities
 
-    @ns.doc('create_city')
-    @ns.expect(city_model)
-    @ns.marshal_with(city_model, code=201)
+    @api.doc('create_city')
+    @api.expect(city_model)
+    @api.marshal_with(city_model, code=201)
     def post(self):
         """create a new city"""
         data = request.json
@@ -119,12 +115,12 @@ class CityList(Resource):
         cities.append(new_city)
         return new_city, 201
 
-@ns.route('/cities/<city_id>')
-@ns.response(404, 'City not found')
-@ns.param('city_id', 'The city id')
+@api.route('/cities/<city_id>')
+@api.response(404, 'City not found')
+@api.param('city_id', 'The city id')
 class CityDetails(Resource):
-    @ns.doc('get_city')
-    @ns.marshal_with(city_model)
+    @api.doc('get_city')
+    @api.marshal_with(city_model)
     def get(self, city_id):
         """get details of a specific city"""
         city_index = get_city_index(city_id)
@@ -133,9 +129,9 @@ class CityDetails(Resource):
         else:
             api.abort(404, "City not found")
 
-    @ns.doc('update_city')
-    @ns.expect(city_model)
-    @ns.marshal_with(city_model)
+    @api.doc('update_city')
+    @api.expect(city_model)
+    @api.marshal_with(city_model)
     def put(self, city_id):
         """ update an existing city """
         city_index = get_city_index(city_id)
@@ -153,8 +149,8 @@ class CityDetails(Resource):
         else:
             api.abort(404, "City not found")
 
-    @ns.doc('delete_city')
-    @ns.response(204, 'City deleted')
+    @api.doc('delete_city')
+    @api.response(204, 'City deleted')
     def delete(self, city_id):
         """delete a specific city"""
         global cities
@@ -164,6 +160,3 @@ class CityDetails(Resource):
             return '', 204
         else:
             api.abort(404, "City not found")
-
-if __name__ == "__main__":
-    app.run()

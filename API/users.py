@@ -1,18 +1,11 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Namespace, Resource, fields
 from datetime import datetime
 from validate_email import validate_email
 import uuid
 
-
-app = Flask(__name__)
-
-""" initialise api with flask restx """
-api = Api(app, version='1.0', title='Hbnb users API Lucas & Eduardo', description='API for manage users')
-
-""" namespace for users endpoints """
-ns = api.namespace('users', description='user operations')
+api = Namespace('users', description='user operations')
 
 """ data model for users """
 user_model = api.model('user', {
@@ -31,17 +24,17 @@ users = []
 """ class for manage the list of users """
 
 
-@ns.route('/users')
+@api.route('/users')
 class Userlist(Resource):
-    @ns.doc('list_users')
-    @ns.marshal_list_with(user_model)
+    @api.doc('list_users')
+    @api.marshal_list_with(user_model)
     def get(self):
         """get list of all users"""
         return users
 
-    @ns.doc('create_user')
-    @ns.expect(user_model)
-    @ns.marshal_list_with(user_model, code=201)
+    @api.doc('create_user')
+    @api.expect(user_model)
+    @api.marshal_list_with(user_model, code=201)
     def post(self):
         """create a new user"""
         data = request.get_json()
@@ -77,12 +70,12 @@ class Userlist(Resource):
 """ class for manage a specific user """
 
 
-@ns.route('/user_id')
-@ns.response(404, 'User not found')
-@ns.param('user_id', 'The user id')
+@api.route('/<user_id>')
+@api.response(404, 'User not found')
+@api.param('user_id', 'The user id')
 class User(Resource):
-    @ns.doc('get_user')
-    @ns.marshal_with(user_model)
+    @api.doc('get_user')
+    @api.marshal_with(user_model)
     def get(self, user_id):
         """ get details of a specific user by is id """
         user = next((user for user in users if user["id"] == user_id), None)
@@ -90,9 +83,9 @@ class User(Resource):
             return user
         api.abort(404, "User not found")
 
-    @ns.doc('update_user')
-    @ns.expect(user_model)
-    @ns.marshal_with(user_model)
+    @api.doc('update_user')
+    @api.expect(user_model)
+    @api.marshal_with(user_model)
     def put(self, user_id):
         """ update an existing user """
         data = request.get_json()
@@ -107,14 +100,10 @@ class User(Resource):
             return user
         api.abort(404, "User not found")
 
-    @ns.doc('delete_user')
-    @ns.response(204, 'User deleted')
+    @api.doc('delete_user')
+    @api.response(204, 'User deleted')
     def delete(self, user_id):
         """Delete a user given its identifier"""
         global users
         users = [user for user in users if user["id"] != user_id]
         return '', 204
-
-
-if __name__ == "__main__":
-    app.run()
