@@ -6,33 +6,28 @@ from reviews import Review
 from typing import List
 from user import User
 from base_model import BaseModel
-
-@dataclass
-class Country(BaseModel):
-    name: str = None
-
-
-@dataclass
-class City(BaseModel):
-    name: str = None
-    country: Country = None
+from countries import Country
+from cities import City
 
 @dataclass
 class Place(BaseModel):
+    id: str = None
     name: str = None
     description: str = None
     address: str = None
     city: City = None
     country: Country = None
-    latitude: float = None
-    longitude: float = None
-    host: User = None # one-to-one relationship with User
+    host_id: int = None # one-to-one relationship with User
     number_of_rooms: int = None
     number_of_bathrooms: int = None
     price_per_night: float = None
     max_guests: int = None
     amenities: List[Amenity] = None
     reviews: List[Review] = None # Placeholder for review references
+
+"""
+Pas besoin de __init__ ni de toJSON grace à la @dataclass
+"""
 
 # Error handling for places
 

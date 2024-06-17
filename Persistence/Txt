@@ -1,0 +1,55 @@
+All manager classes inherit from DataManager, that ensure everything is persistent to JSON file through the _save_data() method.
+/data for JSON files including config
+Each entity has its own JSON file
+
+                                                _______________
+
+
+Each class registers its specific entity type eg "user" "city"
+Methods for interaction (get, save, update, delete) follow a similar pattern using methods from DataManager
+Data persistence is handled by the DataManager class, ensuring consistency and avoiding code repetition.
+
+To do:
+More error handling -> data validation for example.
+Additional functionnalities specific to their entities like filtering cities by country in the CountriesManager.
+
+Code syntax for class managers taking CitiesManager as example.
+
+    class CitiesManager(DataManager):
+                                                                            # Manages city data persistence using JSON file
+                                                                            # Inherits from DataManager class
+
+        def __init__(self):
+            super().__init__()
+            self.register_entity_type("city")
+
+        def get_city(self, city_id: str) -> object:
+
+                                                                            # Retrieves a city object based on its ID
+                                                                            # Args: city_id (str): the city's ID to retrieve
+                                                                            # Returns: The city object if found, or None
+            return self.get("city", city_id)
+
+
+        def save_city(self, city: object) -> bool:
+                                                                            # Saves a city object to the data store
+                                                                            # Args: city (object): the city object to save
+                                                                            # Returns: bool -> True if object saved successfully, or False
+            return self.save(city)
+
+
+
+
+        def update_city(self, city: object) -> bool:
+                                                                            # Updates an existing city in the data store
+                                                                            # Args: city (object): The object with updated data
+                                                                            # Returns: True if object is updated, or False
+            return self.update(city)
+
+
+        def delete_city(self, city_id: str) -> bool:
+                                                                            # Deletes an object from data store from its ID
+                                                                            # Args: objects ID
+                                                                            # Returns: True if deleted successfully, or False
+            return self.delete("city", city_id)
+
