@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
 import geonamescache
 from datetime import datetime
+import uuid
 
 app = Flask(__name__)
 
@@ -23,7 +24,7 @@ country_model = api.model('Country', {
 })
 
 city_model = api.model('City', {
-    'id': fields.Integer(readonly=True, description='City id'),
+    'id': fields.String(readonly=True, description='City id'),
     'name': fields.String(required=True, description='City name'),
     'country_code': fields.String(required=True, description='Country code (ISO 3166-1 alpha-2)'),
     'created_at': fields.DateTime(readonly=True, description='Creation timestamp'),
@@ -32,7 +33,6 @@ city_model = api.model('City', {
 
 """list for all cities"""
 cities = []
-city_id_counter = 1
 
 
 def get_country_name(code):
@@ -104,21 +104,19 @@ class CityList(Resource):
     @ns.marshal_with(city_model, code=201)
     def post(self):
         """create a new city"""
-        global city_id_counter
         data = request.json
         errors = validate_city_data(data)
         if errors:
             api.abort(400, ", ".join(errors))
 
         new_city = {
-            'id': city_id_counter,
+            'id': str(uuid.uuid4()),
             'name': data['name'],
             'country_code': data['country_code'],
             'created_at': datetime.now().strftime("%Y-%m-%d %H:%M"),
             'updated_at': datetime.now().strftime("%Y-%m-%d %H:%M")
         }
         cities.append(new_city)
-        city_id_counter += 1
         return new_city, 201
 
 @ns.route('/cities/<city_id>')

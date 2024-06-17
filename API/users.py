@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
 from datetime import datetime
 from validate_email import validate_email
+import uuid
+
 
 app = Flask(__name__)
 
@@ -14,7 +16,7 @@ ns = api.namespace('users', description='user operations')
 
 """ data model for users """
 user_model = api.model('user', {
-    'id': fields.Integer(readonly=True, description='user unique id'),
+    'id': fields.String(readonly=True, description='user unique id'),
     'email': fields.String(required=True, description='user email adress'),
     'first_name': fields.String(required=True, description='user first name'),
     'last_name': fields.String(required=True, description='user last name'),
@@ -61,7 +63,7 @@ class Userlist(Resource):
             api.abort(400, "First name and Last name cannot be empty")
 
         new_user = {
-            "id": len(users) + 1,
+            "id": str(uuid.uuid4()),
             "email": data['email'],
             "first_name": data['first_name'],
             "last_name": data['last_name'],

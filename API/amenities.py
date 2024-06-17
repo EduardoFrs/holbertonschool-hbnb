@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
 from datetime import datetime
+import uuid
 
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ ns = api.namespace('amenities', description='manage amenities operations')
 
 """ data model for amenities """
 amenities_model = api.model('amenity', {
-    'id': fields.Integer(readonly=True, description='amenity id'),
+    'id': fields.String(readonly=True, description='amenity id'),
     'name': fields.String(required=True, description='name of the amenity'),
     'created_at': fields.String(readonly=True, description='amenity creation timestamp'),
     'updated_at': fields.String(readonly=True, description='amenity latest update timestamp')
@@ -22,7 +23,6 @@ amenities_model = api.model('amenity', {
 
 """ list for store amenities """
 amenities = []
-next_id = 1
 
 
 @ns.route('/amenities')
@@ -46,7 +46,7 @@ class AmenityList(Resource):
             api.abort(409, 'Amenity already exist')
 
         new_amenity = {
-            'id': next_id,
+            'id': str(uuid.uuid4()),
             'name': data['name'],
             'created_at': datetime.now().strftime("%Y-%m-%d %H:%M"),
             'uptaded_at': datetime.now().strftime("%Y-%m-%d %H:%M")
