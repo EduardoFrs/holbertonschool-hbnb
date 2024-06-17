@@ -12,9 +12,9 @@ from dataclasses import dataclass
 app = Flask(__name__)
 api = Api(
     app,
-    version='1.4.2.5.2.0 beta release fuck',
+    version='1.4.2.5.2.0 beta release',
     title='HBNB PART. 1: Users API.',
-    description='API to manage user endpoints. Sign off bro'
+    description='API to manage users endpoints'
 )
 
 ns = api.namespace('users', description='USERS ENDPOINTS')
@@ -22,12 +22,12 @@ api.add_namespace(ns)
 
 
 @ns.route('/users')
-class Userlist(Resource):
+class User(BaseModel):
     @ns.doc('list_users')
     @ns.marshal_list_with(User)
     def get(self):
 
-        return User
+        return User(BaseModel)
 
     @ns.doc('create_user')
     @ns.expect(User)
@@ -54,14 +54,14 @@ class Userlist(Resource):
             api.abort(400, "First name and Last name cannot be empty")
 
         new_user = {
-            "id": len(users) + 1,
+            "id": len(User(BaseModel)) + 1,
             "email": data['email'],
             "first_name": data['first_name'],
             "last_name": data['last_name'],
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M")
         }
-        users.append(new_user)
+        User.append(new_user)
         return new_user, 201
 
 
@@ -73,17 +73,17 @@ class Userlist(Resource):
 @ns.param('user_id', 'The user id')
 class User(Resource):
     @ns.doc('get_user')
-    @ns.marshal_with(user_model)
+    @ns.marshal_with(User)
     def get(self, user_id):
         """ get details of a specific user by is id """
-        user = next((user for user in users if user["id"] == user_id), None)
+        user = next((user for user in User if user["id"] == user_id), None)
         if user:
             return user
         api.abort(404, "User not found")
 
     @ns.doc('update_user')
-    @ns.expect(User)
-    @ns.marshal_with(User)
+    @ns.expect(User(BaseModel))
+    @ns.marshal_with(User(BaseModel))
     def put(self, user_id):
         # update an existing user """
         data = request.get_json()
