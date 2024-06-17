@@ -41,27 +41,16 @@ class DataManager(IPersistenceManager):
                 json.dump(data, file, indent=4)
 
     def save(self, entity: object):
-        # Saves an entity object to corresponding JSON file
-        # Args: entity(object) to be saved
-        # Raises: typeerror if entity object doesn't have ID attribute
         entity_type = type(entity).__name__ # Get entity type from oject
         entity_id = getattr(entity, "id") # Assuming entities have an ID attribute
         self._data.setdefault(entity_type, {}).get(entity_id)
         self._save_data()
 
     def get(self, entity_type: str, entity_id: str) -> object:
-        # Retrieve entity based on type / ID
-        # Args: entity_type (str)
-        #       entity_id (str)
-        # Returns: object found or None
         entity_data = self.data.get(entity_type, {})
         return self._data.get(entity_type, {}).get(entity_id)
 
     def update(self, entity: object):
-        # Updates an existing entity (if found)
-        # Args: entity(object)
-        # Returns: bool: True if entity updated, or false (entity not found)
-        # If true, updates in-memory data
         entity_type = type(entity).__name__
         entity_id = getattr(entity, "id")
         if not self.get(entity_type, entity_id):
@@ -72,11 +61,6 @@ class DataManager(IPersistenceManager):
             return True
 
     def delete(self, entity_type: str, entity_id: str):
-        # Deletes entity from data store and persist changes to JSON
-        # Args: entity_type (str)
-        #        entity_id (str)
-        # Returns: bool: True if deleted successfully or False
-        # Raises KeyError if ID doesn't exist
         if entity_type not in self._data:
             return False
         try:
