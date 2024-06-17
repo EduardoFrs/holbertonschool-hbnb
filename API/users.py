@@ -1,64 +1,55 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource, fields, reqparse
 from datetime import datetime
 from validate_email import validate_email
+from Model.user import User
+from Model.base_model import BaseModel
+from dataclasses import dataclass
 
 # CHANGEMENT TEST POUR CHECK SI BRANCH OK __
 
 app = Flask(__name__)
+api = Api(
+    app,
+    version='1.4.2.5.2.0 beta release fuck',
+    title='HBNB PART. 1: Users API.',
+    description='API to manage user endpoints. Sign off bro'
+)
 
-""" initialise api with flask restx """
-api = Api(app, version='1.0', title='Hbnb users API Lucas & Eduardo', description='API for manage users')
-
-""" namespace for users endpoints """
-ns = api.namespace('users', description='user operations')
-
-""" data model for users """
-user_model = api.model('user', {
-    'id': fields.Integer(readonly=True, description='unique user id'),
-    'email': fields.String(required=True, description='user email adress'),
-    'first_name': fields.String(required=True, description='user first name'),
-    'last_name': fields.String(required=True, description='user last name'),
-    'created_at': fields.DateTime(readonly=True, description='user creation timestamp'),
-    'updated_at': fields.DateTime(readonly=True, description='user latest update timestamp')
-})
-
-""" list for store all users """
-users = []
-
-
-""" class for manage the list of users """
+ns = api.namespace('users', description='USERS ENDPOINTS')
+api.add_namespace(ns)
 
 
 @ns.route('/users')
 class Userlist(Resource):
     @ns.doc('list_users')
-    @ns.marshal_list_with(user_model)
+    @ns.marshal_list_with(User)
     def get(self):
-        """get list of all users"""
-        return users
+
+        return User
 
     @ns.doc('create_user')
-    @ns.expect(user_model)
-    @ns.marshal_list_with(user_model, code=201)
+    @ns.expect(User)
+    @ns.marshal_list_with(User, code=201)
     def post(self):
-        """create a new user"""
+
+        # create a new user
         data = request.get_json()
 
-        """ verify valid inputs """
+        # verify valid inputs
         if 'email' not in data or 'first_name' not in data or 'last_name' not in data:
             api.abort(400, "Missing required fields")
 
-        """ verify valid email """
+        # verify valid email
         if not validate_email(data['email']):
             api.abort(400, "Invalid email format")
 
-        """ verify unique email """
+        # verify unique email
         if any(user['email'] == data['email'] for user in users):
             api.abort(409, "Email already exist")
 
-        """ verify non-empty first name and last name """
+        # verify non-empty first name and last name
         if data['first_name'] == '' or data['last_name'] == '':
             api.abort(400, "First name and Last name cannot be empty")
 
@@ -74,7 +65,7 @@ class Userlist(Resource):
         return new_user, 201
 
 
-""" class for manage a specific user """
+# class for manage a specific user
 
 
 @ns.route('/user_id')
@@ -91,10 +82,10 @@ class User(Resource):
         api.abort(404, "User not found")
 
     @ns.doc('update_user')
-    @ns.expect(user_model)
-    @ns.marshal_with(user_model)
+    @ns.expect(User)
+    @ns.marshal_with(User)
     def put(self, user_id):
-        """ update an existing user """
+        # update an existing user """
         data = request.get_json()
         user = next((user for user in users if user["id"] == user_id), None)
         if user:
@@ -109,12 +100,3 @@ class User(Resource):
 
     @ns.doc('delete_user')
     @ns.response(204, 'User deleted')
-    def delete(self, user_id):
-        """Delete a user given its identifier"""
-        global users
-        users = [user for user in users if user["id"] != user_id]
-        return '', 204
-
-
-if __name__ == "__main__":
-    app.run()
