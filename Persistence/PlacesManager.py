@@ -1,6 +1,8 @@
 from DataManager import DataManager
 
 class PlacesManager(DataManager):
+    # PlacesManager subclass
+
     def __init__(self):
         super().__init__()
         self.register_entity_type("place")
