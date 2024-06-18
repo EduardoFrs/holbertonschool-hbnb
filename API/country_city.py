@@ -3,34 +3,20 @@ from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
 import geonamescache
 from datetime import datetime
+from dataclasses import dataclass
+from ..Model.base_model import BaseModel
+from ..Model.countries import Country
+from ..Model.cities import City
 
 app = Flask(__name__)
-
-""" initialise api with flask restx """
 api = Api(app, version='1.0', title='Hbnb city and country API Lucas & Eduardo', description='API for manage cities and coutries')
-
-""" namespace for city and country endpoint """
 ns = api.namespace('city_country', description='manage interaction for city and country')
-
-"""import preloaded countries """
 gc = geonamescache.GeonamesCache()
 countries = {country['iso']: country['name'] for country in gc.get_countries().values()}
+country_model = Country
+city_model = City
 
-"""data model for countries and cities """
-country_model = api.model('Country', {
-    'name': fields.String(required=True, description='Country name'),
-    'code': fields.String(required=True, description='Country code (ISO 3166-1 alpha-2)')
-})
 
-city_model = api.model('City', {
-    'id': fields.Integer(readonly=True, description='City id'),
-    'name': fields.String(required=True, description='City name'),
-    'country_code': fields.String(required=True, description='Country code (ISO 3166-1 alpha-2)'),
-    'created_at': fields.DateTime(readonly=True, description='Creation timestamp'),
-    'updated_at': fields.DateTime(readonly=True, description='Last update timestamp')
-})
-
-"""list for all cities"""
 cities = []
 city_id_counter = 1
 
