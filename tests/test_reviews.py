@@ -2,14 +2,7 @@ import unittest
 from dataclasses import dataclass
 from ..Model.user import User
 from pydantic import BaseModel, ValidationError
-
-
-@dataclass
-class Review(BaseModel):
-    user: User = None
-    place: dict = None
-    rating: float = None
-    content: str = None
+from ..Model.reviews import Review
 
 
 class TestReview(unittest.TestCase):

@@ -1,31 +1,6 @@
 import unittest
 from dataclasses import dataclass
-
-@dataclass
-class User(unittest.TestCase):
-
-    id: str = None
-    username: str = None
-    email: str = None
-    password: str = None  # Implement hashing for secured password
-    first_name: str = None
-    last_name: str = None
-
-    def __init__(self, data: dict):
-        # Data validation (improved error messages)
-        if not isinstance(data['username'], str):
-            raise ValueError("Username must be a string. Received: {}".format(type(data['username'])))
-        if not data['username']:
-            raise ValueError("Username cannot be empty.")
-
-        # Other initialization logic (if needed)
-        self.id = data.get('id')
-        self.username = data['username']
-        self.email = data.get('email')
-        self.password = data['password']  # Assuming password hashing is done elsewhere
-        self.first_name = data.get('first_name')
-        self.last_name = data.get('last_name')
-
+from ..Model.user import User
 
 class TestUser(unittest.TestCase):
 
