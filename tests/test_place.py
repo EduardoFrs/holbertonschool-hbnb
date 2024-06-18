@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
-from dataclasses import dataclass
-from pydantic import BaseModel, ValidationError
+
+from pydantic import ValidationError
 from ..Model.countries import Country
 from ..Model.cities import City
 from ..Model.amenities import Amenity

@@ -1,5 +1,5 @@
 import unittest
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 from ..Model.amenities import Amenity
 
 
