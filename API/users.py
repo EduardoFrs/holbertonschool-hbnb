@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from flask import Flask, request, jsonify
+<<<<<<< HEAD
 from flask_restx import Api, Resource, fields, reqparse
 from datetime import datetime
 from validate_email import validate_email
@@ -25,13 +26,49 @@ api.add_namespace(ns)
 class User(BaseModel):
     @ns.doc('list_users')
     @ns.marshal_list_with(User)
+=======
+from flask_restx import Api, Namespace, Resource, fields
+from datetime import datetime
+from validate_email import validate_email
+import uuid
+
+api = Namespace('users', description='user operations')
+
+""" data model for users """
+user_model = api.model('user', {
+    'id': fields.String(readonly=True, description='user unique id'),
+    'email': fields.String(required=True, description='user email adress'),
+    'first_name': fields.String(required=True, description='user first name'),
+    'last_name': fields.String(required=True, description='user last name'),
+    'created_at': fields.DateTime(readonly=True, description='user creation timestamp'),
+    'updated_at': fields.DateTime(readonly=True, description='user latest update timestamp')
+})
+
+""" list for store all users """
+users = []
+
+
+""" class for manage the list of users """
+
+
+@api.route('/users')
+class Userlist(Resource):
+    @api.doc('list_users')
+    @api.marshal_list_with(user_model)
+>>>>>>> origin/main
     def get(self):
 
         return User(BaseModel)
 
+<<<<<<< HEAD
     @ns.doc('create_user')
     @ns.expect(User)
     @ns.marshal_list_with(User, code=201)
+=======
+    @api.doc('create_user')
+    @api.expect(user_model)
+    @api.marshal_list_with(user_model, code=201)
+>>>>>>> origin/main
     def post(self):
 
         # create a new user
@@ -54,7 +91,11 @@ class User(BaseModel):
             api.abort(400, "First name and Last name cannot be empty")
 
         new_user = {
+<<<<<<< HEAD
             "id": len(User(BaseModel)) + 1,
+=======
+            "id": str(uuid.uuid4()),
+>>>>>>> origin/main
             "email": data['email'],
             "first_name": data['first_name'],
             "last_name": data['last_name'],
@@ -68,12 +109,17 @@ class User(BaseModel):
 # class for manage a specific user
 
 
-@ns.route('/user_id')
-@ns.response(404, 'User not found')
-@ns.param('user_id', 'The user id')
+@api.route('/<user_id>')
+@api.response(404, 'User not found')
+@api.param('user_id', 'The user id')
 class User(Resource):
+<<<<<<< HEAD
     @ns.doc('get_user')
     @ns.marshal_with(User)
+=======
+    @api.doc('get_user')
+    @api.marshal_with(user_model)
+>>>>>>> origin/main
     def get(self, user_id):
         """ get details of a specific user by is id """
         user = next((user for user in User if user["id"] == user_id), None)
@@ -81,9 +127,15 @@ class User(Resource):
             return user
         api.abort(404, "User not found")
 
+<<<<<<< HEAD
     @ns.doc('update_user')
     @ns.expect(User(BaseModel))
     @ns.marshal_with(User(BaseModel))
+=======
+    @api.doc('update_user')
+    @api.expect(user_model)
+    @api.marshal_with(user_model)
+>>>>>>> origin/main
     def put(self, user_id):
         # update an existing user """
         data = request.get_json()
@@ -98,5 +150,15 @@ class User(Resource):
             return user
         api.abort(404, "User not found")
 
+<<<<<<< HEAD
     @ns.doc('delete_user')
     @ns.response(204, 'User deleted')
+=======
+    @api.doc('delete_user')
+    @api.response(204, 'User deleted')
+    def delete(self, user_id):
+        """Delete a user given its identifier"""
+        global users
+        users = [user for user in users if user["id"] != user_id]
+        return '', 204
+>>>>>>> origin/main
